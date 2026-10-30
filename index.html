@@ -16,7 +16,7 @@ header h1{font-size:16px;margin:0;font-weight:650}header h1 small{display:block;
 .kpis{display:flex;gap:10px;flex-wrap:wrap;margin-left:auto}
 .kpi{border:1px solid var(--line);border-radius:8px;padding:5px 10px;min-width:110px}
 .kpi b{display:block;font-size:15px}.kpi span{color:var(--muted);font-size:11px}
-main{display:grid;grid-template-columns:250px 1fr 330px;height:calc(100% - 62px)}
+main{display:grid;grid-template-columns:250px 1fr 330px;height:calc(100% - 92px)}
 aside{background:var(--panel);border-right:1px solid var(--line);padding:12px;overflow:auto}
 #detail{border-right:0;border-left:1px solid var(--line)}
 h3{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:14px 0 6px}
@@ -296,11 +296,85 @@ table.heat th{font-size:12px;color:var(--muted);text-align:left;font-weight:700}
 .rlook summary{color:var(--ink);font-weight:400}.rlook select{margin:10px 0;max-width:100%;padding:6px;border-radius:7px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
 .saved .lnk{font-size:12px}#savedTxt{flex-basis:100%}
 
+/* ---- Polish: one card style, fewer borders, more white space, the growing-tree identity ---- */
+:root{--card-shadow:0 1px 2px rgba(16,40,30,.05),0 10px 30px rgba(16,40,30,.06);--r:16px}
+/* suite bar (visual only) */
+#suite{display:flex;align-items:center;gap:6px;height:30px;padding:0 16px;background:#ecf8f2;font-size:11.5px;color:var(--muted);overflow-x:auto;white-space:nowrap}
+#suite .sl{font-weight:600;margin-right:6px;letter-spacing:.04em;text-transform:uppercase;font-size:10.5px}
+#suite .sc{padding:2px 10px;border-radius:999px;background:rgba(255,255,255,.7)}#suite i{font-style:normal;opacity:.5}
+#suite .sc.on{background:var(--accent);color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(5,150,105,.3)}
+header{border-bottom:0;box-shadow:0 1px 0 rgba(16,40,30,.06)}
+@media (prefers-color-scheme:dark){#suite{background:#11241c}#suite .sc{background:rgba(255,255,255,.06)}}
+/* one card style across the five tabs */
+#board{padding:28px 32px 48px}
+#board .sec{margin-top:36px}#board .sec:first-child{margin-top:0}
+#board .sec>div:not(.find),.lit,.tree,.rlook,.s36{border:0!important;background:var(--panel);border-radius:var(--r);box-shadow:var(--card-shadow);padding:22px 24px}
+#board h3{font-size:16px;font-weight:650;letter-spacing:0;text-transform:none;color:var(--ink);margin:0 0 6px}
+#board p{line-height:1.55}.lab{font-size:12px}
+.bcard,.amrow,.vcard,.lcard,.chain{border-color:transparent!important;background:var(--bg);border-radius:12px}
+#board .sec>div .xbtn{border:0;background:var(--bg)}
+/* never loop forever: decorative motions run a few times, then rest */
+.chain i,.flow i,.arow.no .aic{animation-iteration-count:3!important}
+/* hero quick-pick chips */
+.fchips{align-items:center}.fchips .lab{margin:0 2px 0 6px}
+.chip.hero{background:var(--panel);border:1px solid rgba(5,150,105,.35);box-shadow:0 2px 8px rgba(5,150,105,.12);padding:6px 12px}
+.chip.hero b{color:var(--accent);margin-right:6px;font-variant-numeric:tabular-nums}.chip.hero:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(5,150,105,.2)}
+/* shimmer over the search bar while typing */
+.fbar{position:relative;overflow:hidden;border-radius:12px}
+.fbar.shim::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,transparent 20%,rgba(52,211,153,.28) 50%,transparent 80%);transform:translateX(-100%);animation:shim .9s ease-out 1}
+@keyframes shim{to{transform:translateX(100%)}}
+/* hidden stock: a small "found" sparkle on parts under other numbers */
+.lcard{position:relative}
+.lcard .spark{position:absolute;top:-8px;right:8px;text-decoration:none;font-size:10px;font-weight:700;color:#fff;background:var(--accent);border-radius:999px;padding:1px 7px;opacity:0;animation:pop .6s cubic-bezier(.2,1.6,.4,1) forwards;animation-delay:inherit}
+.lcard .spark::before,.lcard .spark::after{content:"";position:absolute;width:5px;height:5px;border-radius:50%;background:#6ee7b7;left:-6px;top:2px;opacity:0;animation:twinkle .9s ease-out 1;animation-delay:inherit}
+.lcard .spark::after{left:auto;right:-6px;top:10px;background:#a7f3d0}
+@keyframes pop{0%{opacity:0;transform:scale(.3)}100%{opacity:1;transform:scale(1)}}
+@keyframes twinkle{0%{opacity:0;transform:scale(.2)}40%{opacity:1;transform:scale(1.4)}100%{opacity:0;transform:scale(.6) translateY(-8px)}}
+/* tree: the part appears in the centre, branches grow one by one, hover lifts one branch */
+.tree{position:relative}
+.tsvg .core{transform-box:fill-box;transform-origin:center;animation:corein .5s cubic-bezier(.2,1.4,.4,1) both}
+.tsvg .c1,.tsvg .c2{animation:fade .4s ease .25s both}
+@keyframes corein{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.tsvg .br{stroke-dasharray:900;stroke-dashoffset:900;animation:grow .8s cubic-bezier(.3,.7,.3,1) forwards;transition:opacity .25s,stroke-width .25s,filter .25s}
+.tsvg .leaf{transition:opacity .25s,transform .25s;transform-box:fill-box}
+.tsvg.hov .br:not(.on),.tsvg.hov .leaf:not(.on){opacity:.18}
+.tsvg .br.on{stroke-width:7;filter:drop-shadow(0 4px 6px rgba(5,150,105,.35))}
+.tsvg .leaf.on{transform:translateY(-3px)}.tsvg .leaf.on circle{r:12}
+.brcard{position:absolute;z-index:5;width:250px;background:var(--panel);border-radius:12px;box-shadow:0 12px 32px rgba(16,40,30,.18);padding:12px 14px;font-size:12.5px;pointer-events:none}
+.brcard b{display:block;font-size:14px;margin:6px 0}.brcard em{display:block;color:var(--muted);font-style:normal;margin-top:6px}
+.brcard dl{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin:0}.brcard dt{color:var(--muted)}.brcard dd{margin:0}
+.brcard .cb{display:inline-block;color:#fff;border-radius:999px;padding:1px 8px;font-size:11px;font-weight:600}
+/* confidence ladder: three steps fill with green as confidence rises */
+details.ladder{margin-top:14px;border-top:0;padding-top:0}details.ladder summary{cursor:pointer;padding:8px 0;color:var(--ink)}
+.lrow{border-bottom:0;padding:7px 0;gap:12px}.lrow .lid{min-width:230px;font-size:13px}
+.meter{display:inline-grid;grid-template-columns:repeat(3,92px);gap:4px}
+.meter .st{position:relative;height:22px;border-radius:6px;background:var(--bg);overflow:hidden;font-style:normal}
+.meter .st::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#34d399,var(--accent));transform:scaleX(0);transform-origin:left;transition:transform .5s ease}
+.ladder.grown .meter .st.f::before{transform:scaleX(1)}
+.meter .st span{position:relative;display:block;text-align:center;font-size:10.5px;line-height:22px;color:var(--muted);font-weight:600;transition:color .3s}
+.ladder.grown .meter .st.f span{color:#fff}
+.lrow .nx{font-size:12px;color:var(--muted);flex:1;min-width:180px}
+/* the 36 shared parts settle into families */
+.s36{margin-bottom:18px}.s36h{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;margin-bottom:4px}
+.s36h .hr{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px rgba(5,150,105,.25);vertical-align:-1px}
+.s36svg{width:100%;height:auto;display:block}
+.s36svg .dot{fill:#6ee7b7;stroke:var(--accent);stroke-width:1;opacity:0;transform:translate(var(--dx),var(--dy));transition:transform 1.1s cubic-bezier(.3,.8,.3,1),opacity .6s}
+.s36svg.settled .dot{opacity:1;transform:none}
+.s36svg .dot.hero{fill:var(--accent);stroke:#fff;stroke-width:2;filter:drop-shadow(0 0 4px rgba(5,150,105,.6))}
+.s36svg .fam{cursor:pointer;outline:none}.s36svg .halo{fill:rgba(5,150,105,.06);transition:fill .25s,transform .3s;transform-box:fill-box;transform-origin:center}
+.s36svg .fam:hover .halo,.s36svg .fam:focus .halo{fill:rgba(5,150,105,.16);transform:scale(1.12)}
+.s36svg .fam.on .halo{fill:rgba(5,150,105,.22)}.s36svg .fl{font-size:11.5px;fill:var(--muted);text-transform:capitalize}
+@media (max-width:1100px){#board{padding:20px}.lrow .lid{min-width:0;flex-basis:100%}.meter{grid-template-columns:repeat(3,76px)}}
+/* respect reduced motion: show the end state at once */
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:1ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition-duration:1ms!important;transition-delay:0ms!important}
+  .tsvg .br{stroke-dashoffset:0}.s36svg .dot{opacity:1;transform:none}}
+
 @media (max-width:900px){main{grid-template-columns:1fr;grid-template-rows:auto 60vh auto;height:auto}
 aside{border-right:0;border-bottom:1px solid var(--line)}}
 </style>
 </head>
 <body>
+<nav id="suite" aria-label="Materials suite"><span class="sl">Materials suite</span><span class="sc">SPOF Finder</span><i>&rsaquo;</i><span class="sc">Resilience Shield</span><i>&rsaquo;</i><span class="sc on">Materials Brain</span><i>&rsaquo;</i><span class="sc">Procurement Copilot</span></nav>
 <header>
   <h1><span class="logo"></span>Alternatives Board<small>When a part is missing, I find what else can do its job. Works offline.</small></h1>
   <nav class="tabs" id="tabs" aria-label="Pages"></nav>
@@ -466,11 +540,17 @@ function draw() {
   });
   ctx.globalAlpha = 1;
 }
-function loop() { if (alpha > .002) tick(); draw(); requestAnimationFrame(loop); }
+// Draw only while something moves: the loop stops when the layout has settled and nobody interacts.
+let running = false, quiet = 0;
+function loop() { if (alpha > .002) tick(); draw(); quiet++;
+  if (alpha > .002 || quiet < 30) requestAnimationFrame(loop); else running = false; }
+function kick() { quiet = 0; if (!running) { running = true; requestAnimationFrame(loop); } }
+["pointermove", "pointerdown", "pointerup", "wheel"].forEach(e => cv.addEventListener(e, kick, {passive: true}));
+["change", "click", "keydown"].forEach(e => document.addEventListener(e, kick)); addEventListener("resize", kick);
 function fit() { const vis = nodes.filter(visible); if (!vis.length) return;
   const xs = vis.map(n => n.x), ys = vis.map(n => n.y), x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
   cam.s = Math.min(2, .9 * Math.min(W / (x1 - x0 + 80), H / (y1 - y0 + 80))); cam.x = -(x0 + x1) / 2; cam.y = -(y0 + y1) / 2; }
-for (let i = 0; i < 260; i++) tick(); fit(); loop();
+for (let i = 0; i < 260; i++) tick(); fit(); kick();
 
 // Interaction
 let drag = null, pan = null, moved = false;
@@ -811,8 +891,9 @@ function buildFind() {
       <p>Type a part number, or describe the job in your own words. The Brain finds everything that can do it - at every site, under every number.</p></div>
     <form id="fForm" class="fbar"><input id="fIn" autocomplete="off" placeholder="e.g.  seal, Viton, 50 mm, class 300">
       <button class="helpbtn">Find</button></form>
-    <div class="fchips">${["1000950001 mech seal P-101A", "1000950009 dry gas seal K-201", "1000950023 governor valve G-401", "seal, Viton, 50 mm, class 300", "gasket 4 inch class 300"]
-      .map(c => `<span class="chip">${c}</span>`).join("")}</div>
+    <div class="fchips"><span class="lab">Hero parts</span>${HEROES.map(([id, t]) => `<span class="chip hero" data-q="${id} ${t}"><b>${id}</b>${t}</span>`).join("")}
+      <span class="lab">or try</span>${["seal, Viton, 50 mm, class 300", "gasket 4 inch class 300"].map(c => `<span class="chip" data-q="${c}">${c}</span>`).join("")}</div>
+    <div id="shared36"></div>
     <div class="saved"><span>Money not spent because an alternative existed</span><b id="savedNum">SAR 0</b>
       <i>${S.events} times an alternative was issued instead of buying new</i>
       <a href="#" id="savedHow" class="lnk">how calculated</a><div id="savedTxt" class="hint" hidden>For every past issue of a substitute,
@@ -822,11 +903,12 @@ function buildFind() {
     <div id="fLit"></div><div id="fTree"></div></div>`;
   const go = t => findRun(t);
   $("#fForm").onsubmit = e => { e.preventDefault(); go($("#fIn").value); };
-  document.querySelectorAll("#findSec .chip").forEach(c => c.onclick = () => typeInto($("#fIn"), c.textContent, () => go(c.textContent)));
+  document.querySelectorAll("#findSec .fchips .chip").forEach(c => c.onclick = () => typeInto($("#fIn"), c.dataset.q, () => go(c.dataset.q)));
+  wireShimmer($("#fIn")); buildShared36();
   countTo($("#savedNum"), S.sar, x => "SAR " + fmtN(x), 1800);
   $("#savedHow").onclick = e => { e.preventDefault(); $("#savedTxt").hidden = !$("#savedTxt").hidden; };
   buildReverse();
-  setTimeout(() => { $("#fIn").value = "1000950001 mech seal P-101A"; findRun($("#fIn").value); }, 500);  // default example: a full tree
+  setTimeout(() => { $("#fIn").value = "1000950001 mech seal P-101A"; growTree.quiet = true; findRun($("#fIn").value); growTree.quiet = false; requestAnimationFrame(() => { $("#board").scrollTop = 0; }); }, 500);  // default example: a full tree
 }
 
 function findRun(text) {
@@ -850,7 +932,7 @@ function findRun(text) {
   const sites = new Set(lit.flatMap(n => [n.onhand ? DATA.home : null, ...n.sites.filter(s => s.qty).map(s => s.site)]).filter(Boolean));
   $("#fLit").innerHTML = lit.length ? `<div class="lit"><div class="lhead"><b>${lit.length}</b> parts can do this job, under <b>${lit.length}</b> different numbers at <b>${sites.size}</b> site(s)
       <span class="hidden">hidden stock found: <b id="hidNum">SAR 0</b></span></div>
-    <div class="lgrid">${lit.slice(0, 18).map((n, i) => `<div class="lcard${n === main ? " main" : ""}" data-t="${n.id}" style="animation-delay:${i * 55}ms">
+    <div class="lgrid">${lit.slice(0, 18).map((n, i) => `<div class="lcard${n === main ? " main" : " found"}" data-t="${n.id}" style="animation-delay:${i * 90}ms">${n === main ? "" : '<s class="spark">found</s>'}
       <b>${n.id}</b><span>${nm(n).slice(0, 42)}</span><em>${n.onhand} here${n.sites.filter(s => s.qty).map(s => ` &middot; ${s.qty} ${s.site}`).join("")}</em></div>`).join("")}</div></div>`
     : `<div class="lit">Nothing in the catalogue does this job. <b>No alternative &rarr; buying decision: Procurement Copilot</b>.</div>`;
   $("#fLit").querySelectorAll("[data-t]").forEach(c => c.onclick = () => growTree(byId.get(c.dataset.t)));
@@ -875,10 +957,10 @@ function growTree(n, keepLit) {
       <div class="tleg"><span><i style="background:var(--proven)"></i>Proven - used before</span><span><i style="background:var(--tested)"></i>Tested - approved / same spec</span>
       <span><i style="background:var(--theory)"></i>Theoretical - by the rules</span><span><i class="dash"></i>Buy</span><span class="lab">shorter branch = faster</span></div></div>
     <svg viewBox="0 0 ${W} ${H}" class="tsvg" role="img" aria-label="Alternatives tree for ${n.id}">
-      ${pts.map((p, i) => `<path d="M${cx},${cy} Q${(cx + p.x) / 2 + Math.sin(p.a) * 18},${(cy + p.y) / 2 - Math.cos(p.a) * 18} ${p.x},${p.y}" class="br${p.buy ? " buy" : ""}"
-        style="stroke:${col(p)};animation-delay:${i * 90}ms"/>`).join("")}
+      ${pts.map((p, i) => `<path d="${organic(cx, cy, p)}" class="br${p.buy ? " buy" : ""}" data-i="${i}"
+        style="stroke:${col(p)};animation-delay:${250 + i * 150}ms"/>`).join("")}
       ${pts.map((p, i) => { const [a, b] = label(p), right = p.x >= cx;
-        return `<g class="leaf${p.buy ? "" : " ev"}" data-i="${i}" style="animation-delay:${300 + i * 90}ms"><circle cx="${p.x}" cy="${p.y}" r="9" fill="${col(p)}"/>
+        return `<g class="leaf${p.buy ? "" : " ev"}" data-i="${i}" style="animation-delay:${650 + i * 150}ms"><circle cx="${p.x}" cy="${p.y}" r="9" fill="${col(p)}"/>
           <text x="${p.x + (right ? 14 : -14)}" y="${p.y - 2}" text-anchor="${right ? "start" : "end"}" class="t1">${a}</text>
           <text x="${p.x + (right ? 14 : -14)}" y="${p.y + 13}" text-anchor="${right ? "start" : "end"}" class="t2">${b}</text></g>`; }).join("")}
       <circle cx="${cx}" cy="${cy}" r="44" class="core"/><text x="${cx}" y="${cy - 3}" text-anchor="middle" class="c1">${n.id}</text>
@@ -887,8 +969,8 @@ function growTree(n, keepLit) {
     ${anyAlt ? `<div class="lab">Click a branch for its evidence sheet (MOC attachment). Advisory only - a person approves every action.</div>`
       : `<div class="noalt">No alternative &rarr; buying decision: <b>Procurement Copilot</b></div>`}</div>`;
   $("#fTree").querySelectorAll(".leaf.ev").forEach(g => g.onclick = () => openEvidence(n.id, pts[+g.dataset.i].o));
-  wireLadder($("#fTree"));
-  select(n); if (!keepLit) $("#fTree").scrollIntoView({block: "nearest", behavior: "smooth"});
+  wireLadder($("#fTree")); treeHover($("#fTree"), n, pts);
+  select(n); if (!keepLit && !growTree.quiet) $("#fTree").scrollIntoView({block: "nearest", behavior: "smooth"});
 }
 
 // ---------- Confidence ladder (Theoretical -> Tested) and reverse lookup (what can this stock cover?) ----------
@@ -896,16 +978,22 @@ const LADDER_STEPS = ["Bench or field test", "Engineer approval", "MOC signed"];
 let VREQ = []; try { VREQ = JSON.parse(localStorage.getItem("mb.validation") || "[]"); } catch (e) {}
 const saveReq = () => { try { localStorage.setItem("mb.validation", JSON.stringify(VREQ)); } catch (e) {} };
 
+const LEVEL = {Theoretical: 1, Tested: 2, Proven: 3};
 function ladderHtml(n) {
-  const T = (n.opts || []).filter(o => o.confidence === "Theoretical");
-  if (!T.length) return "";
-  return `<div class="ladder"><h4>Confidence ladder - raise these to Tested</h4>
-    ${T.map(o => { const done = VREQ.some(r => r.for_item === n.id && r.alt === o.item_id);
-      return `<div class="lrow"><span class="cb" style="background:var(--theory)">Theoretical</span><b>${o.item_id}</b>
-        <span class="steps">${LADDER_STEPS.map((s, i) => `<i>${i + 1}</i>${s}`).join("<em>&rarr;</em>")}<em>&rarr;</em><span class="cb" style="background:var(--tested)">Tested</span></span>
-        <button class="xbtn vreq" data-n="${n.id}" data-a="${o.item_id}" ${done ? "disabled" : ""}>${done ? "Requested &#10003;" : "Request validation"}</button></div>`; }).join("")}</div>`;
+  const O = n.opts || [];
+  if (!O.length) return "";
+  const T = O.filter(o => o.confidence === "Theoretical").length;
+  return `<details class="ladder"${T ? " open" : ""}><summary><b>Confidence ladder</b> <span class="lab">Theoretical &rarr; Tested &rarr; Proven${T ? ` &middot; ${T} to validate` : ""}</span></summary>
+    ${O.map(o => { const done = VREQ.some(r => r.for_item === n.id && r.alt === o.item_id), lv = LEVEL[o.confidence];
+      return `<div class="lrow"><b class="lid">${PATH_TXT[o.path]}${o.path === "substitute" || o.path === "equivalent" ? " " + o.item_id : ""}</b>
+        <span class="meter" data-lv="${lv}" aria-label="${o.confidence}">${["Theoretical", "Tested", "Proven"].map((s, i) => `<i class="st${i < lv ? " f" : ""}" style="transition-delay:${i * 180}ms"><span>${s}</span></i>`).join("")}</span>
+        ${lv === 1 ? `<span class="nx">next: ${LADDER_STEPS.join(" &rarr; ")}</span>
+        <button class="xbtn vreq" data-n="${n.id}" data-a="${o.item_id}" ${done ? "disabled" : ""}>${done ? "Requested &#10003;" : "Request validation"}</button>` : `<span class="nx">${o.reason}</span>`}</div>`; }).join("")}</details>`;
 }
 function wireLadder(root) {
+  const lad = root.querySelector(".ladder");
+  if (lad) { const fill = () => { lad.classList.remove("grown"); requestAnimationFrame(() => requestAnimationFrame(() => lad.classList.add("grown"))); };
+    lad.addEventListener("toggle", () => lad.open && fill()); if (lad.open) fill(); }
   root.querySelectorAll(".vreq").forEach(b => b.onclick = () => {
     const n = byId.get(b.dataset.n), o = n.opts.find(x => x.item_id === b.dataset.a);
     VREQ.push({for_item: n.id, alt: o.item_id, desc: n.desc, reason: o.reason, step: LADDER_STEPS[0], date: new Date().toISOString().slice(0, 10)});
@@ -946,6 +1034,86 @@ function buildReverse() {
   };
   $("#rlSel").onchange = e => show(e.target.value);
   if (held.length) show(held[0].id);
+}
+
+// ---------- "A tree of solutions growing": organic branches, branch hover card, search shimmer and
+// the 36 shared parts arranging themselves into families. Every animation ends; nothing runs when idle. ----------
+const HEROES = [["1000950001", "Mech seal P-101A"], ["1000950009", "Dry gas seal K-201"], ["1000950023", "Governor valve G-401"]];
+const CALM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Branch path: a soft S-curve from the part to the leaf, bending a little with the angle.
+function organic(cx, cy, p) {
+  const dx = p.x - cx, dy = p.y - cy, bend = 0.22;
+  const c1x = cx + dx * .35 - dy * bend, c1y = cy + dy * .35 + dx * bend * .4;
+  const c2x = cx + dx * .7 + dy * bend * .5, c2y = cy + dy * .7 - dx * bend * .2;
+  return `M${cx},${cy} C${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p.x.toFixed(1)},${p.y.toFixed(1)}`;
+}
+
+// Hover a branch: it lifts, the others fade, a card shows path, quantity, site and confidence.
+function treeHover(root, n, pts) {
+  const svg = root.querySelector(".tsvg"), wrap = root.querySelector(".tree");
+  if (!svg) return;
+  wrap.insertAdjacentHTML("beforeend", '<div class="brcard" hidden></div>');
+  const card = wrap.querySelector(".brcard");
+  const on = i => {
+    const p = pts[i], o = p.o;
+    svg.classList.add("hov");
+    svg.querySelectorAll(`[data-i="${i}"]`).forEach(e => e.classList.add("on"));
+    const where = !o ? "-" : o.site || o.equipment || o.shop || (byId.get(o.item_id) || {}).sites?.filter(s => s.qty).map(s => `${s.qty} at ${s.site}`).join(", ") || DATA.home;
+    card.innerHTML = p.buy
+      ? `<b>Buy new</b><span>${p.d >= 400 ? "no supplier left" : p.d + " days lead time"}</span><em>The buying decision belongs to Procurement Copilot.</em>`
+      : `<span class="cb" style="background:${css(CONF[o.confidence])}">${o.confidence}</span><b>${PATH_TXT[o.path]}</b>
+        <dl><dt>Part</dt><dd>${o.item_id}</dd><dt>Quantity</dt><dd>${o.qty != null ? o.qty + " here" + (elsewhere(o) ? ` + ${elsewhere(o)} elsewhere` : "") : "on demand"}</dd>
+        <dt>Where</dt><dd>${where}</dd><dt>Time</dt><dd>${p.d ? p.d + " day(s)" : "today"}</dd></dl><em>${o.reason}</em>`;
+    const r = svg.getBoundingClientRect(), w = wrap.getBoundingClientRect(), sx = r.width / 860, sy = r.height / 440;
+    const x = r.left - w.left + p.x * sx, y = r.top - w.top + p.y * sy;
+    card.hidden = false;
+    card.style.left = Math.max(8, Math.min(w.width - card.offsetWidth - 8, x + (p.x > 430 ? 18 : -card.offsetWidth - 18))) + "px";
+    card.style.top = Math.max(8, y - card.offsetHeight / 2) + "px";
+  };
+  const off = () => { svg.classList.remove("hov"); svg.querySelectorAll(".on").forEach(e => e.classList.remove("on")); card.hidden = true; };
+  svg.querySelectorAll("[data-i]").forEach(e => { e.addEventListener("mouseenter", () => on(+e.dataset.i)); e.addEventListener("mouseleave", off); });
+}
+
+// A soft shimmer runs over the search bar while typing (one short pass per keystroke burst).
+function wireShimmer(input) {
+  let t = null;
+  input.addEventListener("input", () => {
+    input.parentElement.classList.remove("shim"); void input.offsetWidth; input.parentElement.classList.add("shim");
+    clearTimeout(t); t = setTimeout(() => input.parentElement.classList.remove("shim"), 900);
+  });
+}
+
+// First open: the 36 shared parts float in as dots and settle into families by function.
+// Clicking a family blooms it into the alternatives tree of its best-covered part.
+function buildShared36() {
+  const S = ITEMS.filter(n => +n.id >= 1000950001 && +n.id <= 1000950036);
+  const el = $("#shared36"); if (!S.length || !el) return;
+  const fam = new Map(); S.forEach(n => { const f = n.function || "other"; if (!fam.has(f)) fam.set(f, []); fam.get(f).push(n); });
+  const F = [...fam.entries()].sort((a, b) => b[1].length - a[1].length), W = 860, cols = Math.min(6, F.length), rows = Math.ceil(F.length / cols);
+  const H = 70 + rows * 92, cell = W / cols, hero = new Set(HEROES.map(h => h[0]));
+  let k = 0;
+  const dots = [], heads = F.map(([f, list], j) => {
+    const fx = cell * (j % cols) + cell / 2, fy = 58 + Math.floor(j / cols) * 92;
+    list.forEach((n, i) => { const a = i * 2.4, r = 6 + 5.5 * Math.sqrt(i);
+      const h = (+n.id * 2654435761 % 1000) / 1000;
+      dots.push({n, f, x: fx + Math.cos(a) * r, y: fy + Math.sin(a) * r, x0: W * h, y0: H * ((h * 7.31) % 1), d: k++ * 22}); });
+    const best = [...list].sort((a, b) => hero.has(b.id) - hero.has(a.id) || (b.opts || []).length - (a.opts || []).length)[0];
+    return {f, list, fx, fy, best};
+  });
+  el.innerHTML = `<div class="s36"><div class="s36h"><b>The shared catalogue</b><span class="lab">${S.length} parts used by all four tools, grouped by the job they do.
+      Click a family to grow its alternatives tree. <i class="hr"></i> hero part</span></div>
+    <svg viewBox="0 0 ${W} ${H}" class="s36svg" role="img" aria-label="Shared parts grouped by function">
+      ${heads.map((h, j) => `<g class="fam" data-j="${j}" tabindex="0" role="button" aria-label="${h.f}: ${h.list.length} parts">
+        <circle cx="${h.fx}" cy="${h.fy}" r="${18 + 5 * Math.sqrt(h.list.length)}" class="halo"/>
+        <text x="${h.fx}" y="${h.fy + 34 + 3 * Math.sqrt(h.list.length)}" text-anchor="middle" class="fl">${h.f} (${h.list.length})</text></g>`).join("")}
+      ${dots.map(d => `<circle r="${hero.has(d.n.id) ? 5.5 : 4}" cx="${d.x.toFixed(1)}" cy="${d.y.toFixed(1)}" class="dot${hero.has(d.n.id) ? " hero" : ""}"
+        style="--dx:${(d.x0 - d.x).toFixed(1)}px;--dy:${(d.y0 - d.y).toFixed(1)}px;transition-delay:${d.d}ms"><title>${d.n.id} ${nm(d.n)}</title></circle>`).join("")}
+    </svg></div>`;
+  const svg = el.querySelector("svg");
+  if (!CALM) requestAnimationFrame(() => requestAnimationFrame(() => svg.classList.add("settled"))); else svg.classList.add("settled");
+  const bloom = j => { const h = heads[j]; el.querySelectorAll(".fam").forEach(g => g.classList.toggle("on", +g.dataset.j === j)); growTree(h.best); };
+  el.querySelectorAll(".fam").forEach(g => { g.onclick = () => bloom(+g.dataset.j); g.onkeydown = e => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), bloom(+g.dataset.j)); });
 }
 
 // ---------- The alternatives organ: coverage heat map, chains, variant reduction, 3D-print shortlist,
