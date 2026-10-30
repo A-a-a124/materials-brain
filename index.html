@@ -3,12 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
 <title>Alternatives Board</title>
 <style>
-:root{--bg:#f5f8f6;--panel:#ffffff;--ink:#1d2433;--muted:#667085;--line:#e1e8e4;--accent:#059669;--proven:#059669;--tested:#0ea5e9;--theory:#d97706;
+:root{--bg:#f5f8f6;--panel:#ffffff;--ink:#1d2433;--muted:#667085;--line:#e1e8e4;--accent:#059669;--proven:#059669;--tested:#0284c7;--theory:#b45309;
 --V:#d1433f;--E:#e39b1b;--D:#8796ab;--fn:#0f766e;--sup:#7a5cc4;--site:#2f9e5b;--sub:#2563eb;--eq:#ea580c}
-@media (prefers-color-scheme:dark){:root{--bg:#0f141b;--panel:#161d27;--ink:#e6eaf0;--muted:#97a3b6;--line:#263042;
---accent:#34d399;--fn:#34d399;--sub:#60a5fa;--proven:#34d399;--tested:#38bdf8;--theory:#fbbf24}}
+/* Always the light emerald identity, whatever the system theme. */
+:root{color-scheme:light}
 *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
 font:13px/1.45 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
 header{display:flex;align-items:center;gap:18px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel);flex-wrap:wrap}
@@ -298,13 +299,14 @@ table.heat th{font-size:12px;color:var(--muted);text-align:left;font-weight:700}
 
 /* ---- Polish: one card style, fewer borders, more white space, the growing-tree identity ---- */
 :root{--card-shadow:0 1px 2px rgba(16,40,30,.05),0 10px 30px rgba(16,40,30,.06);--r:16px}
-/* suite bar (visual only) */
-#suite{display:flex;align-items:center;gap:6px;height:30px;padding:0 16px;background:#ecf8f2;font-size:11.5px;color:var(--muted);overflow-x:auto;white-space:nowrap}
-#suite .sl{font-weight:600;margin-right:6px;letter-spacing:.04em;text-transform:uppercase;font-size:10.5px}
-#suite .sc{padding:2px 10px;border-radius:999px;background:rgba(255,255,255,.7)}#suite i{font-style:normal;opacity:.5}
-#suite .sc.on{background:var(--accent);color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(5,150,105,.3)}
+/* linked suite bar: same spec in all four tools (fixed, 30 px, current tool filled) */
+#suite{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:6px;height:30px;padding:0 16px;background:#fff;border-bottom:1px solid #e1e8e4;font-size:12px;overflow-x:auto;white-space:nowrap}
+body{padding-top:30px}
+#suite .sl{font-weight:700;margin-right:8px;color:#1d2433;letter-spacing:.02em}
+#suite .sc{padding:2px 12px;border-radius:999px;border:1.5px solid #c9d6cf;color:#344054;text-decoration:none;font-weight:600;line-height:18px}
+#suite .sc:hover{border-color:var(--accent);color:var(--accent)}
+#suite .sc.on{background:#059669;border-color:#059669;color:#fff}
 header{border-bottom:0;box-shadow:0 1px 0 rgba(16,40,30,.06)}
-@media (prefers-color-scheme:dark){#suite{background:#11241c}#suite .sc{background:rgba(255,255,255,.06)}}
 /* one card style across the five tabs */
 #board{padding:28px 32px 48px}
 #board .sec{margin-top:36px}#board .sec:first-child{margin-top:0}
@@ -368,13 +370,32 @@ details.ladder{margin-top:14px;border-top:0;padding-top:0}details.ladder summary
 /* respect reduced motion: show the end state at once */
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:1ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition-duration:1ms!important;transition-delay:0ms!important}
   .tsvg .br{stroke-dashoffset:0}.s36svg .dot{opacity:1;transform:none}}
+/* live suggestions */
+.fbar{overflow:visible}.fbar.shim{overflow:hidden}
+.sugg{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:20;list-style:none;margin:0;padding:6px;background:#fff;border-radius:12px;box-shadow:0 14px 36px rgba(16,40,30,.16)}
+.sugg li{display:grid;grid-template-columns:auto 1fr;gap:0 10px;padding:7px 10px;border-radius:8px;cursor:pointer}
+.sugg li.on,.sugg li:hover{background:#ecf8f2}.sugg b{font-size:13.5px}.sugg em{grid-column:2;font-style:normal;font-size:12px;color:var(--muted)}
+.sugg .k{grid-row:span 2;align-self:center;font-size:10px;font-weight:700;text-transform:uppercase;border-radius:6px;padding:2px 6px;background:#e7f0ec;color:#0f5132}
+.sugg .k.job{background:var(--accent);color:#fff}
+/* compare two alternatives */
+.tsvg .tick{cursor:pointer;outline:none}.tsvg .tick circle{fill:#fff;stroke:#9fb3aa;stroke-width:1.5}
+.tsvg .tick path{fill:none;stroke:transparent;stroke-width:2;stroke-linecap:round}
+.tsvg .tick:hover circle,.tsvg .tick:focus circle{stroke:var(--accent)}
+.tsvg .tick.on circle{fill:var(--accent);stroke:var(--accent)}.tsvg .tick.on path{stroke:#fff}
+.cmp{margin-top:10px;background:var(--bg);border-radius:12px;padding:14px 16px}
+.cmph{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.cmp table{width:100%;border-collapse:collapse;table-layout:fixed}.cmp th{width:110px;text-align:left;color:var(--muted);font-weight:600;vertical-align:top;padding:5px 0}
+.cmp td{padding:5px 8px;vertical-align:top;border-bottom:1px solid #e7efea;font-size:12.5px}
+.cmp .cb{display:inline-block;color:#fff;border-radius:999px;padding:1px 8px;font-size:11px;font-weight:600}
 
 @media (max-width:900px){main{grid-template-columns:1fr;grid-template-rows:auto 60vh auto;height:auto}
 aside{border-right:0;border-bottom:1px solid var(--line)}}
 </style>
 </head>
 <body>
-<nav id="suite" aria-label="Materials suite"><span class="sl">Materials suite</span><span class="sc">SPOF Finder</span><i>&rsaquo;</i><span class="sc">Resilience Shield</span><i>&rsaquo;</i><span class="sc on">Materials Brain</span><i>&rsaquo;</i><span class="sc">Procurement Copilot</span></nav>
+<nav id="suite" aria-label="Materials Readiness suite"><span class="sl">Materials Readiness</span>
+  <a class="sc" data-tool="spof" data-href="../../spof/out/graph.html">SPOF</a><a class="sc" data-tool="shield" data-href="../../resilience-shield/out/dashboard.html">Shield</a>
+  <a class="sc on" data-tool="brain" aria-current="page" data-href="genome_graph.html">Brain</a><a class="sc" data-tool="copilot" data-href="../../procurement-copilot/out/copilot.html">Copilot</a></nav>
 <header>
   <h1><span class="logo"></span>Alternatives Board<small>When a part is missing, I find what else can do its job. Works offline.</small></h1>
   <nav class="tabs" id="tabs" aria-label="Pages"></nav>
@@ -889,7 +910,7 @@ function buildFind() {
   $("#findSec").innerHTML = `<div class="find">
     <div class="fhead"><h2>What do you need?</h2>
       <p>Type a part number, or describe the job in your own words. The Brain finds everything that can do it - at every site, under every number.</p></div>
-    <form id="fForm" class="fbar"><input id="fIn" autocomplete="off" placeholder="e.g.  seal, Viton, 50 mm, class 300">
+    <form id="fForm" class="fbar"><input id="fIn" autocomplete="off" placeholder="e.g.  seal, Viton, 50 mm, class 300   (press / to search)">
       <button class="helpbtn">Find</button></form>
     <div class="fchips"><span class="lab">Hero parts</span>${HEROES.map(([id, t]) => `<span class="chip hero" data-q="${id} ${t}"><b>${id}</b>${t}</span>`).join("")}
       <span class="lab">or try</span>${["seal, Viton, 50 mm, class 300", "gasket 4 inch class 300"].map(c => `<span class="chip" data-q="${c}">${c}</span>`).join("")}</div>
@@ -904,10 +925,12 @@ function buildFind() {
   const go = t => findRun(t);
   $("#fForm").onsubmit = e => { e.preventDefault(); go($("#fIn").value); };
   document.querySelectorAll("#findSec .fchips .chip").forEach(c => c.onclick = () => typeInto($("#fIn"), c.dataset.q, () => go(c.dataset.q)));
-  wireShimmer($("#fIn")); buildShared36();
+  wireShimmer($("#fIn")); wireSuggest($("#fIn")); buildShared36();
   countTo($("#savedNum"), S.sar, x => "SAR " + fmtN(x), 1800);
   $("#savedHow").onclick = e => { e.preventDefault(); $("#savedTxt").hidden = !$("#savedTxt").hidden; };
   buildReverse();
+  const deep = hashPart();  // opened from another tool with #part=<material number>
+  if (deep) return setTimeout(() => { $("#fIn").value = deep; findRun(deep); }, 400);
   setTimeout(() => { $("#fIn").value = "1000950001 mech seal P-101A"; growTree.quiet = true; findRun($("#fIn").value); growTree.quiet = false; requestAnimationFrame(() => { $("#board").scrollTop = 0; }); }, 500);  // default example: a full tree
 }
 
@@ -963,13 +986,16 @@ function growTree(n, keepLit) {
         return `<g class="leaf${p.buy ? "" : " ev"}" data-i="${i}" style="animation-delay:${650 + i * 150}ms"><circle cx="${p.x}" cy="${p.y}" r="9" fill="${col(p)}"/>
           <text x="${p.x + (right ? 14 : -14)}" y="${p.y - 2}" text-anchor="${right ? "start" : "end"}" class="t1">${a}</text>
           <text x="${p.x + (right ? 14 : -14)}" y="${p.y + 13}" text-anchor="${right ? "start" : "end"}" class="t2">${b}</text></g>`; }).join("")}
+      ${pts.map((p, i) => p.buy ? "" : `<g class="tick" data-c="${i}" tabindex="0" role="checkbox" aria-label="Compare ${PATH_TXT[p.o.path]}">
+        <circle cx="${p.x}" cy="${p.y - 22}" r="8"/><path d="M${p.x - 3.5},${p.y - 22} l2.5,2.5 l4.5,-5"/></g>`).join("")}
       <circle cx="${cx}" cy="${cy}" r="44" class="core"/><text x="${cx}" y="${cy - 3}" text-anchor="middle" class="c1">${n.id}</text>
       <text x="${cx}" y="${cy + 14}" text-anchor="middle" class="c2">${n.onhand} free</text></svg>
+    <div class="cmp" hidden></div>
     ${ladderHtml(n)}
-    ${anyAlt ? `<div class="lab">Click a branch for its evidence sheet (MOC attachment). Advisory only - a person approves every action.</div>`
+    ${anyAlt ? `<div class="lab">Tick two branches to compare them; click a branch for its evidence sheet (MOC attachment). Advisory only - a person approves every action.</div>`
       : `<div class="noalt">No alternative &rarr; buying decision: <b>Procurement Copilot</b></div>`}</div>`;
   $("#fTree").querySelectorAll(".leaf.ev").forEach(g => g.onclick = () => openEvidence(n.id, pts[+g.dataset.i].o));
-  wireLadder($("#fTree")); treeHover($("#fTree"), n, pts);
+  wireLadder($("#fTree")); treeHover($("#fTree"), n, pts); wireCompare($("#fTree"), n, pts);
   select(n); if (!keepLit && !growTree.quiet) $("#fTree").scrollIntoView({block: "nearest", behavior: "smooth"});
 }
 
@@ -1114,6 +1140,80 @@ function buildShared36() {
   if (!CALM) requestAnimationFrame(() => requestAnimationFrame(() => svg.classList.add("settled"))); else svg.classList.add("settled");
   const bloom = j => { const h = heads[j]; el.querySelectorAll(".fam").forEach(g => g.classList.toggle("on", +g.dataset.j === j)); growTree(h.best); };
   el.querySelectorAll(".fam").forEach(g => { g.onclick = () => bloom(+g.dataset.j); g.onkeydown = e => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), bloom(+g.dataset.j)); });
+}
+
+// ---------- Suite links (#part= hand-off), live search suggestions, "/" shortcut, compare two alternatives ----------
+// Suite bar: every chip carries the selected part, so the other tools open on the same material number.
+function suiteLinks(id) {
+  document.querySelectorAll("#suite .sc").forEach(a => { a.href = a.dataset.href + (id ? "#part=" + id : ""); });
+}
+const _select = select;
+select = n => { _select(n); if (n && n.kind === "item") suiteLinks(n.id); };  // eslint-disable-line no-global-assign
+suiteLinks("");
+const hashPart = () => { const m = location.hash.match(/part=(\d{10})/); return m && byId.get(m[1]) ? m[1] : null; };
+addEventListener("hashchange", () => { const id = hashPart(); if (id) { setTab("find"); $("#fIn").value = id; findRun(id); } });
+
+// Live suggestions: part numbers, part names and job families; arrows + Enter, Escape closes.
+const SUGG = (() => {
+  const fam = new Map(); ITEMS.forEach(n => n.function && fam.set(n.function, (fam.get(n.function) || 0) + 1));
+  return [...[...fam].map(([f, c]) => ({kind: "job", q: f, t: f, sub: `${c} parts do this job`})),
+          ...ITEMS.map(n => ({kind: "part", q: n.id, t: nm(n), id: n.id, sub: `${n.id} · ${n.onhand} free · ${(n.opts || []).length} alternative(s)`}))];
+})();
+function wireSuggest(input) {
+  input.insertAdjacentHTML("afterend", '<ul class="sugg" role="listbox" hidden></ul>');
+  input.setAttribute("role", "combobox"); input.setAttribute("aria-autocomplete", "list"); input.setAttribute("aria-expanded", "false");
+  const ul = input.parentElement.querySelector(".sugg");
+  let list = [], at = -1;
+  const close = () => { ul.hidden = true; at = -1; input.setAttribute("aria-expanded", "false"); };
+  const mark = () => ul.querySelectorAll("li").forEach((li, i) => li.classList.toggle("on", i === at));
+  const pick = s => { close(); input.value = s.kind === "part" ? `${s.id} ${s.t}` : s.q; findRun(s.kind === "part" ? s.id : s.q); };
+  input.addEventListener("input", () => {
+    const words = input.value.toLowerCase().split(/[\s,]+/).filter(w => w.length > 1);
+    if (!words.length) return close();
+    const score = s => { const h = (s.q + " " + s.t).toLowerCase(); return words.every(w => h.includes(w)) ? (s.kind === "job" ? 2 : 1) + (h.startsWith(words[0]) ? 1 : 0) : 0; };
+    list = SUGG.map(s => [score(s), s]).filter(x => x[0]).sort((a, b) => b[0] - a[0]).slice(0, 8).map(x => x[1]);
+    if (!list.length) return close();
+    at = -1;
+    ul.innerHTML = list.map((s, i) => `<li role="option" data-i="${i}"><span class="k ${s.kind}">${s.kind === "job" ? "job" : "part"}</span><b>${s.t}</b><em>${s.sub}</em></li>`).join("");
+    ul.hidden = false; input.setAttribute("aria-expanded", "true");
+    ul.querySelectorAll("li").forEach(li => li.onmousedown = e => { e.preventDefault(); pick(list[+li.dataset.i]); });
+  });
+  input.addEventListener("keydown", e => {
+    if (ul.hidden) return;
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); at = (at + (e.key === "ArrowDown" ? 1 : list.length - 1)) % list.length; mark(); }
+    else if (e.key === "Enter" && at >= 0) { e.preventDefault(); pick(list[at]); }
+    else if (e.key === "Escape") close();
+  });
+  input.addEventListener("blur", () => setTimeout(close, 120));
+  input.form.addEventListener("submit", close);
+}
+document.addEventListener("keydown", e => {
+  if (e.key !== "/" || /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return;
+  e.preventDefault(); setTab("find"); $("#board").scrollTop = 0; $("#fIn").focus(); $("#fIn").select();
+});
+
+// Compare: tick any two branches of the tree to see them side by side.
+function wireCompare(root, n, pts) {
+  let picked = [];
+  const box = root.querySelector(".cmp");
+  const row = (h, f) => `<tr><th>${h}</th>${picked.map(i => `<td>${f(pts[i].o, pts[i])}</td>`).join("")}</tr>`;
+  const draw = () => {
+    root.querySelectorAll(".tick").forEach(t => t.classList.toggle("on", picked.includes(+t.dataset.c)));
+    if (picked.length < 2) { box.hidden = picked.length === 0; box.innerHTML = picked.length ? `<p class="lab">Tick one more branch to compare.</p>` : ""; return; }
+    box.hidden = false;
+    box.innerHTML = `<div class="cmph"><b>Compare two alternatives for ${n.id}</b><button class="xbtn" aria-label="Close comparison">Close</button></div>
+      <table>${row("Path", o => `<b>${PATH_TXT[o.path]}</b>`)}${row("Part", o => o.item_id)}${row("Days", (o, p) => p.d ? p.d : "today")}
+      ${row("Quantity", o => o.qty != null ? o.qty + " here" + (elsewhere(o) ? ` + ${elsewhere(o)} elsewhere` : "") : "on demand")}
+      ${row("Site", o => o.site || o.equipment || o.shop || (byId.get(o.item_id).sites.filter(s => s.qty).map(s => s.site).join(", ") || DATA.home))}
+      ${row("Confidence", o => `<span class="cb" style="background:${css(CONF[o.confidence])}">${o.confidence}</span> ${o.reason}`)}
+      ${row("Conditions", o => (o.conditions || []).join("; ") || "none")}</table>`;
+    box.querySelector("button").onclick = () => { picked = []; draw(); };
+  };
+  root.querySelectorAll(".tick").forEach(t => {
+    const flip = e => { e.stopPropagation(); const c = +t.dataset.c;
+      picked = picked.includes(c) ? picked.filter(x => x !== c) : [...picked, c].slice(-2); draw(); };
+    t.addEventListener("click", flip); t.addEventListener("keydown", e => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip(e)));
+  });
 }
 
 // ---------- The alternatives organ: coverage heat map, chains, variant reduction, 3D-print shortlist,
